@@ -274,7 +274,7 @@
         getText: function() {
             return currentText;
         },
-        setText: function(text, new_color = null) {
+        setText: function(text) {
             if (currentLabelMesh) {
                 (addTo || widgets.scene).remove(currentLabelMesh);
             }
@@ -287,9 +287,6 @@
             context.font = size + "pt Arial";
             context.textAlign = "center";
             context.textBaseline = "middle";
-            if (new_color !== null) {
-              color = new_color;
-            }
             context.fillStyle = hexpadding.substring(0, hexpadding.length - color.toString(16).length) + color.toString(16);
             context.fillText(text, canvas.width / 2, canvas.height / 2);
 
