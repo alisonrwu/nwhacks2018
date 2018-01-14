@@ -5,6 +5,13 @@ var buttons = [];
 var x = [-xDistance, -xDistance, xDistance, xDistance];
 var y = [-yDistance, yDistance, -yDistance, yDistance];
 var colors = [0xffcc66, 0xcc3399, 0x00cc99, 0x3399ff];
+var buttonSequence = [];
+var NUM_SEQUENCE = 4;
+var currentSequence = 0;
+var progress = 0;
+var success = false;
+var fail = false;
+var gameStart = false;
 
 var initWidgets = function () {
 	window.widgets = new LeapWidgets(window.scene);
@@ -14,9 +21,18 @@ var initWidgets = function () {
 	
 	for (var i = 0; i < 4; i++) {
 		buttons.push(widgets.createButton("", new THREE.Vector3(x[i], y[i], -100), new THREE.Vector3(100, 70, 30), colors[i]));
-		buttons[i].addEventListener('press', function(evt) {
-		});
 	}
+	buttons[0].addEventListener('press', function(evt) {
+		pressButton(0);
+	});
+	buttons[1].addEventListener('press', function(evt) {
+		pressButton(1);
+	});buttons[2].addEventListener('press', function(evt) {
+		pressButton(2);
+	});
+	buttons[3].addEventListener('press', function(evt) {
+		pressButton(3);
+	});
 	var spotLight = new THREE.SpotLight(0xffffff, 1);
 	spotLight.shadowCameraVisible = true;
 	spotLight.castShadow = true;
@@ -37,15 +53,49 @@ var initWidgets = function () {
 		renderer.render(scene, camera);
 	}, false);
 	scene.add(camera);
+	playSequence();
 	requestAnimationFrame(update);
 }
 
-var update = function() {
+var update = function () {
 	renderer.render(scene, camera);
 	requestAnimationFrame(update);
 }
 
+function pressButton(id) {
+	if (gameStart == false) return;
+	console.log(buttonSequence[progress]);
+	console.log(id);
+	if (id == buttonSequence[progress] && fail == false) progress++;
+	else {
+		fail = true;
+		console.log("You lose!");
+	}
+	if (progress == 4) {
+		successs = true;
+		console.log("You won!");
+	}
+	
+}
+
+var playSequence = function() {
+	curButton = buttons[buttonSequence[currentSequence]]
+	curButton.position.set(curButton.position.x, curButton.position.y, curButton.position.z - 50);
+	curButton.__dirtyPosition = true;
+	currentSequence++;
+	if (currentSequence < NUM_SEQUENCE) {
+		setTimeout(playSequence, 300);
+	} else {
+		setTimeout(function () { gameStart = true; }, 500);
+	}
+}
+
 var initScene = function () {
+	for (var i = 0; i < NUM_SEQUENCE; i++) {
+		buttonSequence.push(Math.floor(Math.random() * NUM_SEQUENCE));
+		console.log(buttonSequence[i]);
+	}
+	
   Physijs.scripts.worker = '../../js/lib/physijs_worker.js';
   window.scene = new Physijs.Scene();
   window.scene.addEventListener('update', function() {

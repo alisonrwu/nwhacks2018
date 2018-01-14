@@ -2,7 +2,7 @@ var camera;
 var controls;
 var balloon;
 
-init = function () {
+var init = function () {
 	var sphereGeometry = new THREE.SphereGeometry(10, 32, 32);
 	var sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xdd55ff });
 	balloon = new THREE.Mesh(sphereGeometry, sphereMaterial);
@@ -29,17 +29,17 @@ init = function () {
 	});
 };
 
-update = function () {
-	if (balloon.inflated === 3) {
-		balloonMiniGame.success = true;
-	};
-}
-
-balloonMiniGame = new MiniGame(init, tearDown, update);
-
 var tearDown = function () {
 	scene.remove(balloon);
 	scene.remove(string);
 	scene.remove(wall);
 	scene.remove(pumpButton);
 };
+
+var update = function () {
+	if (balloon.inflated === 3) {
+		balloonMiniGame.success = true;
+	};
+}
+
+balloonMiniGame = new MiniGame(init, tearDown, update);
