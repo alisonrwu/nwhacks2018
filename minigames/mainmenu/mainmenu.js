@@ -18,7 +18,6 @@ var setUpMiniGame = function () {
   if (currentGame != null) {
     currentGame.tearDown();
   }
-
   selectRandomMiniGame();
   currentGame.init();
   startTimer();
@@ -33,18 +32,24 @@ var selectRandomMiniGame = function() {
 var startTimer = function () {
   TIMER_START = 17;
   var currentTime = TIMER_START;
-  timer.setText("Time: " + parseInt(currentTime));
+  createText("Time: " + parseInt(currentTime), 12, new THREE.Vector3(camera.position.x - 140, camera.position.y - 100, camera.position.z - 200), new THREE.MeshPhongMaterial({
+      color: 0xdddddd
+  }));
+
 
   var timerUpdate = setInterval(function() {
+    var timer = scene.getObjectByName("Time: " + parseInt(currentTime));
     currentTime--;
-    timer.setText("Time: " + parseInt(currentTime));
+    createText("Time: " + parseInt(currentTime), 12, new THREE.Vector3(camera.position.x - 140, camera.position.y - 100, camera.position.z - 200), new THREE.MeshPhongMaterial({
+        color: 0xdddddd
+    }));
+    scene.remove(timer);
     if (currentTime === 3) {
 
     }
 
     if (currentTime === 0) {
       clearInterval(timerUpdate);
-
       if (currentGame.success === true) {
         gameSucceed();
       } else {
@@ -56,7 +61,7 @@ var startTimer = function () {
 
 var gameSucceed = function () {
 	succeedAudio.play();
-  nextMiniGame();
+  nextMiniGame()
 };
 
 var gameOver = function () {
@@ -75,8 +80,9 @@ var gameOver = function () {
     } else {
       closeDoor(function () {
         currentGame.tearDown();
-        widgets.createLabel("GAME OVER!! ", new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z - 200), 14, 0xffff00);
-        console.log('game over');
+        createText("Game Over", 16, new THREE.Vector3(camera.position.x - 65, camera.position.y, camera.position.z - 200), new THREE.MeshPhongMaterial({
+            color: 0xfddddd
+        }));
       })
     }
   }, 2000);
@@ -118,19 +124,19 @@ var closeDoor = function (callback) {
   DOOR_DEPTH = 10;
   DOOR_Y = camera.position.y;
   DOOR_Z = camera.position.z - 230;
-	
+
 	setTimeout( function () {
 		doorCloseAudio.play();
 		},
 		250);
-	
+
 
   LEFT_DOOR_X = camera.position.x - DOOR_WIDTH;
   leftDoor = widgets.createWall(new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
 
   RIGHT_DOOR_X = camera.position.x + DOOR_WIDTH;
   rightDoor = widgets.createWall(new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
-	
+
 
   animateMesh(leftDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z), {
     duration: 800
@@ -225,14 +231,11 @@ var initWidgets = function () {
 		renderer.render(scene, camera);
 	}, false);
 
-  // SETUP TIMER
-  timer = widgets.createLabel("Time: ", new THREE.Vector3(camera.position.x - 120, camera.position.y - 80, camera.position.z - 200), 14, 0xffff00);
-
   // SETUP LIVES
   lives = [];
 
   var geometry = new THREE.SphereGeometry( 8, 32, 32 );
-  var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+  var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
   var sphere = new THREE.Mesh( geometry, material );
   lives.push(sphere);
   sphere.position.set(camera.position.x - 135, camera.position.y + 80, camera.position.z - 200);
@@ -260,6 +263,31 @@ var initScene = function () {
   window.renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(window.renderer.domElement);
 };
+
+var createText = function(text, size, vector3, material) {
+  var loader = new THREE.FontLoader();
+  var font = loader.load(
+  	// resource URL
+  	'../../fonts/helvetiker_bold.typeface.json',
+
+  	// onLoad callback
+  	function (font) {
+      var textGeom = new THREE.TextGeometry( text, {
+          font: font,
+          size: size,
+          height: 1,
+          bevelEnabled: true,
+          bevelThickness: 2,
+          bevelSize: 0.5,
+          bevelSegments: 5
+      });
+      var textMesh = new THREE.Mesh( textGeom, material );
+      textMesh.position.set(vector3.x, vector3.y, vector3.z);
+      textMesh.name = text;
+  		scene.add( textMesh );
+  	}
+  );
+}
 
 var init = function () {
   initScene();
