@@ -10,12 +10,28 @@ var sun;
 var ground;
 var orbitControl;
 var analyser;
+var delay;
+var note;
+var velocity;
 
 init();
+
 function init() {
-	createScene(); //set up the scene
-	update(); //call game loop
-}
+	MIDI.loadPlugin({
+		soundfontUrl: "soundfont/",
+		instrument: "acoustic_grand_piano", // or multiple instruments
+		onprogress: function(state, progress) {
+			console.log(state, progress);
+		},
+		onsuccess: function () {
+			delay = 0; // play one note every quarter second
+			note = 50; // the MIDI note
+			velocity = 127; // how hard the note hits
+			MIDI.setVolume(0, 30);
+			createScene(); // set up the scene
+			update(); //call game loop
+		}
+})}
 
 function createScene() {
     sceneWidth = window.innerWidth;
@@ -82,6 +98,7 @@ function update(){//animate
     var avgFrequency = analyser.getAverageFrequency()*0.01;
     console.log(avgFrequency);
     console.log(analyser.getFrequencyData())
+	
     if(avgFrequency > 0) {
 	    hero.scale.set(avgFrequency,avgFrequency,avgFrequency);
     }
