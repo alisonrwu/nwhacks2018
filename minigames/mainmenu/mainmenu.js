@@ -158,6 +158,7 @@ var nextMiniGame = function () {
 var initMiniGames = function () {
   possibleGames.push(balloonMiniGame);
   possibleGames.push(simonSaysMiniGame);
+  possibleGames.push(punchingMiniGame);
 }
 
 var initWidgets = function () {
