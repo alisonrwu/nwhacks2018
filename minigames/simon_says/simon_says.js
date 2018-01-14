@@ -11,13 +11,12 @@ var buttonSequence = [];
 var NUM_SEQUENCE = 4;
 var currentSequence;
 var progress;
-var success;
 var fail;
 var gameStart;
 
 var init = function () {
 	currentSequence = 0;
-	success = false;
+	simonSaysMiniGame.success = false;
 	fail = false;
 	gameStart = false;
 	progress = 0;
@@ -58,7 +57,7 @@ function pressButton(id) {
 		console.log("You lose!");
 	}
 	if (progress == 4) {
-		successs = true;
+		simonSaysMiniGame.success = true;
 		console.log("You won!");
 	}
 }

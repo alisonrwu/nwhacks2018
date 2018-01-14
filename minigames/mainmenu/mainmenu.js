@@ -23,7 +23,7 @@ var selectRandomMiniGame = function() {
 };
 
 var startTimer = function () {
-  TIMER_START = 20;
+  TIMER_START = 17;
   var currentTime = TIMER_START;
   timer.setText("Time: " + parseInt(currentTime));
 
@@ -93,8 +93,11 @@ var nextMiniGame = function () {
 
   RIGHT_DOOR_X = camera.position.x + DOOR_WIDTH;
   rightDoor = widgets.createWall(new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
-	var audio = new Audio('../../sounds/door_closing.wav');
-	audio.play();
+	setTimeout( function () {
+		var audio = new Audio('../../sounds/door_closing.wav');
+		audio.play();
+	},
+	1000);
 
   animateMesh(leftDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z));
   animateMesh(rightDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z), {
@@ -105,7 +108,11 @@ var nextMiniGame = function () {
 				audio.play(); 
 				},
 				1000);
-
+				setTimeout( function () {
+				var audio = new Audio('../../sounds/Minigame1.mp3');
+				audio.play(); 
+				},
+				2000);
       animateMesh(leftDoor, new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), {
         callback: function() {
           scene.remove(leftDoor);
