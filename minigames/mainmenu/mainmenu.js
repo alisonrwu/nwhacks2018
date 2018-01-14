@@ -118,19 +118,19 @@ var closeDoor = function (callback) {
   DOOR_DEPTH = 10;
   DOOR_Y = camera.position.y;
   DOOR_Z = camera.position.z - 230;
-	
+
 	setTimeout( function () {
 		doorCloseAudio.play();
 		},
 		250);
-	
+
 
   LEFT_DOOR_X = camera.position.x - DOOR_WIDTH;
   leftDoor = widgets.createWall(new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
 
   RIGHT_DOOR_X = camera.position.x + DOOR_WIDTH;
   rightDoor = widgets.createWall(new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
-	
+
 
   animateMesh(leftDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z), {
     duration: 800
@@ -182,6 +182,7 @@ var initMiniGames = function () {
   possibleGames.push(balloonMiniGame);
   possibleGames.push(simonSaysMiniGame);
   possibleGames.push(punchingMiniGame);
+  possibleGames.push(petBoxMiniGame);
 }
 
 var initWidgets = function () {
