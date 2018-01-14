@@ -35,9 +35,7 @@ var init = function () {
 
     if (parseInt(counterLabel.getText()) === goal) {
       instructions.setText("Hooray, your pet box is happy!", "0xff69b4");
-      setTimeout(function () {
-        window.location.replace("../mainmenu/mainmenu.html");
-      }, 3000);
+      this.success = true;
     }
   });
 
