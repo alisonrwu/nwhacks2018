@@ -113,7 +113,7 @@ var nextMiniGame = function () {
 };
 
 var initMiniGames = function () {
-  //possibleGames.push(balloonMiniGame);
+  possibleGames.push(balloonMiniGame);
   possibleGames.push(simonSaysMiniGame);
 }
 
@@ -123,11 +123,15 @@ var initWidgets = function () {
 
   // SETUP START BUTTON
   var BUTTON_DEPTH = 30;
-  startButton = widgets.createButton("Start", new THREE.Vector3(0, 0, -150), new THREE.Vector3(200, 100, BUTTON_DEPTH));
+  var startButton = widgets.createButton("Start", new THREE.Vector3(0, 0, -150), new THREE.Vector3(200, 100, BUTTON_DEPTH));
     startButton.addEventListener('press', function(evt) {
       console.log("Start button pressed");
       startGame();
     });
+
+  console.log(scene);
+  public_functions.removeObject(startButton);
+  console.log(startButton);
 
   // SETUP CAMERA
   camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -164,6 +168,7 @@ var initWidgets = function () {
 
 var initScene = function () {
   Physijs.scripts.worker = '../../js/lib/physijs_worker.js';
+  Physijs.scripts.ammo = '../../js/lib/ammo.js';
   window.scene = new Physijs.Scene();
 
   window.renderer = new THREE.WebGLRenderer({
@@ -189,5 +194,5 @@ function update() {
   requestAnimationFrame(update);
 }
 
-init();
+window.onload = init();
 update();
