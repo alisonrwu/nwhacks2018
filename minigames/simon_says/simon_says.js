@@ -70,7 +70,7 @@ var tearDown = function() {
 	for (var i = 0; i < 4; i++) {
 		scene.remove(buttons[i]);
 	}
-	label = scene.getObjectByName("Simon Says");
+	var label = scene.getObjectByName("Simon Says");
 	scene.remove(label);
 }
 

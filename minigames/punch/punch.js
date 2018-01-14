@@ -22,7 +22,7 @@ var init = function () {
 };
 
 var tearDown = function(){
-	scene.remove(wall);
+	scene.remove(wall); 
 	scene.remove(base);
 	scene.remove(knob);
 	healthLabel.setText("");
