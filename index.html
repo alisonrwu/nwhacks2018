@@ -1,17 +1,40 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-  <title>Bone Hands - Leap</title>
-  <script type="text/javascript" src="js/three.r67.js"></script>
-  <script type="text/javascript" src="js/lib/physi.js"></script>
-  <script type="text/javascript" src="js/leap-0.6.2.min.js"></script>
-  <script type="text/javascript" src="js/leap-plugins-0.1.6.min.js"></script>
-  <script type="text/javascript" src="js/leap.widgets.js"></script>
-  <style type="text/css">#connect-leap{zoom: 0.4;}</style>
-</head>
-<body>
-  <script type="text/javascript">
-    var initScene = function () {
+  <head>
+    <title>Bone Hands - Leap</title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+	<!-- polyfill -->
+	<script src="../inc/shim/Base64.js" type="text/javascript"></script>
+	<script src="../inc/shim/Base64binary.js" type="text/javascript"></script>
+	<script src="../inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+	<!-- midi.js package -->
+	<script src="../js/midi/audioDetect.js" type="text/javascript"></script>
+	<script src="../js/midi/gm.js" type="text/javascript"></script>
+	<script src="../js/midi/loader.js" type="text/javascript"></script>
+	<script src="../js/midi/plugin.audiotag.js" type="text/javascript"></script>
+	<script src="../js/midi/plugin.webaudio.js" type="text/javascript"></script>
+	<script src="../js/midi/plugin.webmidi.js" type="text/javascript"></script>
+	<script src="../js/midi/player.js" type="text/javascript"></script>
+	<!-- utils -->
+	<script src="../js/util/dom_request_xhr.js" type="text/javascript"></script>
+	<script src="../js/util/dom_request_script.js" type="text/javascript"></script>
+	<!-- leap -->
+	<script type="text/javascript" src="js/three.r67.js"></script>
+	<script type="text/javascript" src="js/lib/physi.js"></script>
+	<script type="text/javascript" src="js/leap-0.6.2.min.js"></script>
+	<script type="text/javascript" src="js/leap-plugins-0.1.6.min.js"></script>
+	<script type="text/javascript" src="js/leap.widgets.js"></script>
+	<style type="text/css">#connect-leap{zoom: 0.4;}</style>
+  </head>
+  <body>
+    <div id="canvas"></div>
+    <script src="js/three.min.js"></script>
+    <script src="js/OrbitControls.js"></script>
+	<!-- <script src="main.js"></script></script> -->
+    <script type="text/javascript">
+	var initScene = function () {
       Physijs.scripts.worker = 'js/lib/physijs_worker.js';
       window.scene = new Physijs.Scene();
       window.scene.addEventListener('update', function() {
@@ -78,6 +101,6 @@
 
     initScene();
   </script>
-
-</body>
+  </body>
 </html>
+
