@@ -2,6 +2,45 @@ var bark_sounds = new Audio("../../sounds/box-bark.mp3");
 var pant_sounds = new Audio("../../sounds/box-pant.mp3");
 var instructions, buttons_pressed, counterLabel, goal, goal_label, wall, pet;
 
+var position = { x : 0, y: 300 };
+var target = { x : 400, y: 50 };
+var tween = new TWEEN.Tween(position).to(target, 2000);
+
+tween.onUpdate(function(){
+    mesh.position.x = position.x;
+    mesh.position.y = position.y;
+});
+
+var animateMesh = function(mesh, target, options){
+    options = options || {};
+    // get targets from options or set to defaults
+    var to = target || THREE.Vector3(),
+        easing = options.easing || TWEEN.Easing.Quadratic.In,
+        duration = options.duration || 2000;
+
+    var update = function() {
+      mesh.__dirtyPosition = true;
+    };
+
+    // create the tween
+    var tweenVector3 = new TWEEN.Tween(mesh.position)
+        .to({ x: to.x, y: to.y, z: to.z, }, duration)
+        .easing(easing)
+        .onUpdate(function(d) {
+            if(options.update){
+                options.update(d);
+            }
+            update();
+         })
+        .onComplete(function(){
+          if(options.callback) options.callback();
+        });
+    // start the tween
+    tweenVector3.start();
+    // return the tween in case we want to manipulate it later on
+    return tweenVector3;
+};
+
 var bark = function() {
   counterLabel.setText(parseInt(counterLabel.getText())+1);
   if (bark_sounds.paused) {
