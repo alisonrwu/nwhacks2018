@@ -24,7 +24,7 @@ var init = function () {
 	var cylinderGeometry = new THREE.CylinderGeometry(1,1,300);
 	var stringMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa });
 	string = new THREE.Mesh(cylinderGeometry, stringMaterial);
-	string.position.y = 50
+	string.position.y = 50;
 	scene.add(string);
 
 	wall = widgets.createWall(new THREE.Vector3(0, 0, -300), new THREE.Vector3(500, 300, 100));
@@ -70,11 +70,11 @@ function scaleUp(mesh) {
 		.easing(TWEEN.Easing.Elastic.InOut);
 	// start the tween
 	tweenVector3.start();
-}
+};
 
 function ExplodeAnimation(x,y,z,scene) {
 	var geometry = new THREE.Geometry();
-  
+
 	for (i=0; i<1800; i++) {
 		var vertex = new THREE.Vector3(x, y, z);
 		geometry.vertices.push(vertex);
@@ -86,17 +86,17 @@ function ExplodeAnimation(x,y,z,scene) {
 	}
 	var material = new THREE.PointsMaterial({ size: particleSize,  color: colors[Math.round(Math.random() * colors.length)] });
 	var particles = new THREE.Points(geometry, material);
-  
+
 	this.object = particles;
 	console.log(this);
 	this.status = true;
-  
+
 	this.xDir = (Math.random() * movementSpeed)-(movementSpeed/2);
 	this.yDir = (Math.random() * movementSpeed)-(movementSpeed/2);
 	this.zDir = (Math.random() * movementSpeed)-(movementSpeed/2);
-  
-	scene.add(this.object); 
-  
+
+	scene.add(this.object);
+
 	this.update = function(){
 		if (this.status == true){
 			var pCount = totalParticles;

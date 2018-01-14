@@ -15,6 +15,7 @@ var startGame = function () {
 };
 
 var setUpMiniGame = function () {
+  console.log(currentGame);
   if (currentGame != null) {
     currentGame.tearDown();
   }
@@ -298,7 +299,7 @@ var createText = function(text, size, vector3, material) {
   		scene.add( textMesh );
   	}
   );
-}
+};
 
 var init = function () {
   initScene();
@@ -314,7 +315,7 @@ function update() {
   renderer.render(scene, camera);
   TWEEN.update();
   requestAnimationFrame(update);
-}
+};
 
 window.onload = init();
 update();
