@@ -242,10 +242,6 @@ var init = function () {
   initScene();
   initWidgets();
   initMiniGames();
-
-  label = widgets.createLabel("GAME OVER!! ", new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z - 200), 14, 0xffff00);
-  console.log(scene);
-  scene.remove(label);
 };
 
 function update() {
