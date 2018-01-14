@@ -6,6 +6,7 @@ var wall;
 var pumpButton;
 
 var init = function () {
+	balloonMiniGame.success = false;
 	var sphereGeometry = new THREE.SphereGeometry(10, 32, 32);
 	var sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xdd55ff });
 	balloon = new THREE.Mesh(sphereGeometry, sphereMaterial);
