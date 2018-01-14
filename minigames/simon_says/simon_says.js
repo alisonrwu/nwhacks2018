@@ -42,7 +42,7 @@ var init = function () {
 		buttonSequence.push(Math.floor(Math.random() * NUM_SEQUENCE));
 	}
 	setTimeout(playSequence, 2000);
-}
+};
 
 var update = function () {
 }
@@ -60,7 +60,7 @@ function pressButton(id) {
 		simonSaysMiniGame.success = true;
 		console.log("You won!");
 	}
-}
+};
 
 var tearDown = function() {
 
@@ -72,7 +72,7 @@ var tearDown = function() {
 	}
 	scene.remove(label);
 	console.log("label doesn't remove");
-}
+};
 
 var playSequence = function() {
 	var curButton = buttons[buttonSequence[currentSequence]];
@@ -84,6 +84,6 @@ var playSequence = function() {
 	} else {
 		setTimeout(function () { gameStart = true; }, 1000);
 	}
-}
+};
 
 simonSaysMiniGame = new MiniGame(init, tearDown, update);

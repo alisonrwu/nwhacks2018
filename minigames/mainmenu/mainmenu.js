@@ -6,7 +6,7 @@ var succeedAudio = new Audio('../../sounds/correct.wav');
 var wrongAudio = new Audio('../../sounds/wrong.wav');
 var doorOpenAudio =  new Audio('../../sounds/door_opening.wav');
 var doorCloseAudio = new Audio('../../sounds/door_closing.wav');
-var Minigame1Audio = new Audio('../../sounds/Minigame1.mp3');
+var MinigameSongs = [(new Audio('../../sounds/Minigame1.mp3')), (new Audio('../../sounds/Minigame2.mp3'))];
 
 
 var startGame = function () {
@@ -22,7 +22,7 @@ var setUpMiniGame = function () {
   selectRandomMiniGame();
   currentGame.init();
   startTimer();
-}
+};
 
 var selectRandomMiniGame = function() {
   var select = Math.floor((Math.random() * possibleGames.length));
@@ -52,7 +52,7 @@ var startTimer = function () {
       }
     }
   }, 1000);
-}
+};
 
 var gameSucceed = function () {
 	succeedAudio.play();
@@ -77,7 +77,7 @@ var gameOver = function () {
         currentGame.tearDown();
         widgets.createLabel("GAME OVER!! ", new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z - 200), 14, 0xffff00);
         console.log('game over');
-      })
+      });
     }
   }, 2000);
 };
@@ -102,7 +102,7 @@ var animateMesh = function(mesh, target, options){
                 options.update(d);
             }
             update();
-         })
+         });
         .onComplete(function(){
           if(options.callback) options.callback();
         });
@@ -144,7 +144,7 @@ var closeDoor = function (callback) {
 				},
 				500);
 				setTimeout( function () {
-				Minigame1Audio.play();
+				MinigameSongs[Math.floor(Math.random() * MinigameSongs.length)].play();
 				},
 				1000);
       animateMesh(leftDoor, new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), {
@@ -159,7 +159,7 @@ var closeDoor = function (callback) {
       callback();
     }
   });
-}
+};
 
 var nextMiniGame = function () {
   closeDoor(function () {
@@ -182,7 +182,7 @@ var initMiniGames = function () {
   possibleGames.push(balloonMiniGame);
   possibleGames.push(simonSaysMiniGame);
   possibleGames.push(punchingMiniGame);
-}
+};
 
 var initWidgets = function () {
 	window.widgets = new LeapWidgets(window.scene);
