@@ -1,4 +1,3 @@
-var camera;
 var controls;
 var balloon;
 var string;
@@ -42,6 +41,6 @@ var update = function () {
 	if (balloon.inflated === 3) {
 		balloonMiniGame.success = true;
 	};
-}
+};
 
 balloonMiniGame = new MiniGame(init, tearDown, update);
