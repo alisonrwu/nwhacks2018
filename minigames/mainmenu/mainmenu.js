@@ -185,9 +185,9 @@ var nextMiniGame = function () {
 };
 
 var initMiniGames = function () {
-  // possibleGames.push(balloonMiniGame);
-  // possibleGames.push(simonSaysMiniGame);
-  // possibleGames.push(punchingMiniGame);
+  possibleGames.push(balloonMiniGame);
+  possibleGames.push(simonSaysMiniGame);
+  possibleGames.push(punchingMiniGame);
   possibleGames.push(petBoxMiniGame);
 }
 
