@@ -23,7 +23,7 @@ var selectRandomMiniGame = function() {
 };
 
 var startTimer = function () {
-  TIMER_START = 5;
+  TIMER_START = 20;
   var currentTime = TIMER_START;
   timer.setText("Time: " + parseInt(currentTime));
 

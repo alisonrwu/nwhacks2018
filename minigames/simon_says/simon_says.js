@@ -9,13 +9,18 @@ var y = [-yDistance, yDistance, -yDistance, yDistance];
 var colors = [0xffcc66, 0xcc3399, 0x00cc99, 0x3399ff];
 var buttonSequence = [];
 var NUM_SEQUENCE = 4;
-var currentSequence = 0;
-var progress = 0;
-var success = false;
-var fail = false;
-var gameStart = false;
+var currentSequence;
+var progress;
+var success;
+var fail;
+var gameStart;
 
 var init = function () {
+	currentSequence = 0;
+	success = false;
+	fail = false;
+	gameStart = false;
+	progress = 0;
 	label = widgets.createLabel("Simon Says", new THREE.Vector3(0, 110, -110), 16, 0xffffff);
 	wall = widgets.createWall(new THREE.Vector3(0, 0, -200), new THREE.Vector3(500, 300, 10));
 
@@ -34,12 +39,10 @@ var init = function () {
 	buttons[3].addEventListener('press', function(evt) {
 		pressButton(3);
 	})
-	playSequence();
-	requestAnimationFrame(update);
 	for (var i = 0; i < NUM_SEQUENCE; i++) {
 		buttonSequence.push(Math.floor(Math.random() * NUM_SEQUENCE));
-		console.log(buttonSequence[i]);
 	}
+	setTimeout(playSequence, 5000);
 }
 
 var update = function () {
@@ -69,14 +72,14 @@ var teardown = function() {
 }
 
 var playSequence = function() {
-	curButton = buttons[buttonSequence[currentSequence]]
+	var curButton = buttons[buttonSequence[currentSequence]];
 	curButton.position.set(curButton.position.x, curButton.position.y, curButton.position.z - 50);
 	curButton.__dirtyPosition = true;
 	currentSequence++;
 	if (currentSequence < NUM_SEQUENCE) {
-		setTimeout(playSequence, 300);
+		setTimeout(playSequence, 600);
 	} else {
-		setTimeout(function () { gameStart = true; }, 500);
+		setTimeout(function () { gameStart = true; }, 1000);
 	}
 }
 
