@@ -1,6 +1,6 @@
-function MiniGame(init, teardown, update) {
+function MiniGame(init, tearDown, update) {
   this.success = false;
   this.init = init;
-  this.teardown = teardown;
+  this.tearDown = tearDown;
   this.update = update;
 }

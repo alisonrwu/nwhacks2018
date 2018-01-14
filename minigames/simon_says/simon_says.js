@@ -18,23 +18,28 @@ var gameStart = false;
 var init = function () {
 	label = widgets.createLabel("Simon Says", new THREE.Vector3(0, 110, -110), 16, 0xffffff);
 	wall = widgets.createWall(new THREE.Vector3(0, 0, -200), new THREE.Vector3(500, 300, 10));
-	
+
 	for (var i = 0; i < 4; i++) {
 		buttons.push(widgets.createButton("", new THREE.Vector3(x[i], y[i], -100), new THREE.Vector3(100, 70, 30), colors[i]));
 	}
 	buttons[0].addEventListener('press', function(evt) {
 		pressButton(0);
-	});
+	})
 	buttons[1].addEventListener('press', function(evt) {
 		pressButton(1);
-	});buttons[2].addEventListener('press', function(evt) {
+	})
+	buttons[2].addEventListener('press', function(evt) {
 		pressButton(2);
-	});
+	})
 	buttons[3].addEventListener('press', function(evt) {
 		pressButton(3);
-	});
+	})
 	playSequence();
 	requestAnimationFrame(update);
+	for (var i = 0; i < NUM_SEQUENCE; i++) {
+		buttonSequence.push(Math.floor(Math.random() * NUM_SEQUENCE));
+		console.log(buttonSequence[i]);
+	}
 }
 
 var update = function () {
@@ -61,6 +66,7 @@ var teardown = function() {
 		scene.remove(buttons[i]);
 	}
 	scene.remove(label);
+}
 
 var playSequence = function() {
 	curButton = buttons[buttonSequence[currentSequence]]
@@ -74,11 +80,4 @@ var playSequence = function() {
 	}
 }
 
-var initScene = function () {
-	for (var i = 0; i < NUM_SEQUENCE; i++) {
-		buttonSequence.push(Math.floor(Math.random() * NUM_SEQUENCE));
-		console.log(buttonSequence[i]);
-	}
-}
-
-simonSays = new MiniGame(init, teardown, update);
+simonSaysMiniGame = new MiniGame(init, teardown, update);

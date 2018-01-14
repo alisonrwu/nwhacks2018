@@ -1,3 +1,4 @@
+var possibleGames = [];
 var currentGame = null;
 
 var startGame = function () {
@@ -16,33 +17,27 @@ var setUpMiniGame = function () {
 }
 
 var selectRandomMiniGame = function() {
-  var select = Math.floor((Math.random() * 2));
-
-  if (select === 0) {
-    currentGame = balloonMiniGame;
-  } elseif (select === 1) {
-    
-  }
+  var select = Math.floor((Math.random() * possibleGames.length));
+  console.log(possibleGames);
+  currentGame = possibleGames[select];
 };
 
 var startTimer = function () {
-  TIMER_START = 10;
+  TIMER_START = 5;
   var currentTime = TIMER_START;
-  var timer = widgets.createLabel("Time: " + currentTime, new THREE.Vector3(camera.position.x - 120, camera.position.y - 120, camera.position.z - 300), 15, 0x000000);
-  scene.add(timer);
+  timer.setText("Time: " + parseInt(currentTime));
 
   var timerUpdate = setInterval(function() {
     currentTime--;
     timer.setText("Time: " + parseInt(currentTime));
     if (currentTime === 0) {
+      clearInterval(timerUpdate);
+
       if (currentGame.success === true) {
         gameSucceed();
       } else {
         gameOver();
       }
-
-      clearInterval(timerUpdate);
-      scene.remove(timer);
     }
   }, 1000);
 }
@@ -117,14 +112,16 @@ var nextMiniGame = function () {
   });
 };
 
-
+var initMiniGames = function () {
+  //possibleGames.push(balloonMiniGame);
+  possibleGames.push(simonSaysMiniGame);
+}
 
 var initWidgets = function () {
 	window.widgets = new LeapWidgets(window.scene);
 	widgets.initLeapHand();
 
-  // SETUP DOORS
-
+  // SETUP START BUTTON
   var BUTTON_DEPTH = 30;
   startButton = widgets.createButton("Start", new THREE.Vector3(0, 0, -150), new THREE.Vector3(200, 100, BUTTON_DEPTH));
     startButton.addEventListener('press', function(evt) {
@@ -160,6 +157,9 @@ var initWidgets = function () {
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.render(scene, camera);
 	}, false);
+
+  // SETUP TIMER
+  timer = widgets.createLabel("Time: ", new THREE.Vector3(camera.position.x - 120, camera.position.y - 120, camera.position.z - 300), 15, 0x000000);
 };
 
 var initScene = function () {
@@ -171,8 +171,12 @@ var initScene = function () {
   });
   window.renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(window.renderer.domElement);
+};
 
-	initWidgets();
+var init = function () {
+  initScene();
+  initWidgets();
+  initMiniGames();
 };
 
 function update() {
@@ -185,5 +189,5 @@ function update() {
   requestAnimationFrame(update);
 }
 
-initScene();
+init();
 update();

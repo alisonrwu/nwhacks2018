@@ -1,6 +1,9 @@
 var camera;
 var controls;
 var balloon;
+var string;
+var wall;
+var pumpButton;
 
 var init = function () {
 	var sphereGeometry = new THREE.SphereGeometry(10, 32, 32);
@@ -16,15 +19,14 @@ var init = function () {
 	string.position.y = 50
 	scene.add(string);
 
-	var wall = widgets.createWall(new THREE.Vector3(0, 0, -300), new THREE.Vector3(500, 300, 100));
+	wall = widgets.createWall(new THREE.Vector3(0, 0, -300), new THREE.Vector3(500, 300, 100));
 	widgets.createLabel("Pop the balloon", new THREE.Vector3(0, wall.position.y, wall.position.z + 100), 20, 0xffffff);
 
-	var pumpButton = widgets.createButton("Pump", new THREE.Vector3(100, 0, -110), new THREE.Vector3(100, 70, 50));
+	pumpButton = widgets.createButton("Pump", new THREE.Vector3(100, 0, -110), new THREE.Vector3(100, 70, 50));
 	pumpButton.addEventListener('press', function(evt) {
 		balloon.scale.addScalar(1);
 		balloon.inflated++;
 		console.log(balloon.inflated);
-
 		console.log(balloon.scale);
 	});
 };
