@@ -6,7 +6,7 @@ var succeedAudio = new Audio('../../sounds/correct.wav');
 var wrongAudio = new Audio('../../sounds/wrong.wav');
 var doorOpenAudio =  new Audio('../../sounds/door_opening.wav');
 var doorCloseAudio = new Audio('../../sounds/door_closing.wav');
-var Minigame1Audio = new Audio('../../sounds/Minigame1.mp3');
+var MinigameSongs = [(new Audio('../../sounds/Minigame1.mp3')), (new Audio('../../sounds/Minigame2.mp3'))];
 
 
 var startGame = function () {
@@ -33,24 +33,15 @@ var selectRandomMiniGame = function() {
 var startTimer = function () {
   TIMER_START = 17;
   var currentTime = TIMER_START;
-  createText("Time: " + parseInt(currentTime), 12, new THREE.Vector3(camera.position.x - 140, camera.position.y - 100, camera.position.z - 200), new THREE.MeshPhongMaterial({
-      color: 0xdddddd
-  }));
-
 
   var timerUpdate = setInterval(function() {
-    var timer = scene.getObjectByName("Time: " + parseInt(currentTime));
     currentTime--;
-    createText("Time: " + parseInt(currentTime), 12, new THREE.Vector3(camera.position.x - 140, camera.position.y - 100, camera.position.z - 200), new THREE.MeshPhongMaterial({
-        color: 0xdddddd
-    }));
-    scene.remove(timer);
-    if (currentTime === 3) {
-
-    }
+    console.log(currentTime);
+    timer.setText("Time: " + parseInt(currentTime));
 
     if (currentTime === 0) {
       clearInterval(timerUpdate);
+
       if (currentGame.success === true) {
         gameSucceed();
       } else {
@@ -84,7 +75,7 @@ var gameOver = function () {
         createText("Game Over", 16, new THREE.Vector3(camera.position.x - 65, camera.position.y, camera.position.z - 200), new THREE.MeshPhongMaterial({
             color: 0xfddddd
         }));
-      })
+      });
     }
   }, 2000);
 };
@@ -145,24 +136,6 @@ var closeDoor = function (callback) {
   animateMesh(rightDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z), {
     duration: 800,
     callback: function() {
-      setUpMiniGame();
-			setTimeout( function () {
-				doorOpenAudio.play();
-				},
-				500);
-				setTimeout( function () {
-				Minigame1Audio.play();
-				},
-				1000);
-      animateMesh(leftDoor, new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), {
-        callback: function() {
-          scene.remove(leftDoor);
-        }});
-      animateMesh(rightDoor, new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), {
-        callback: function() {
-          scene.remove(rightDoor);
-        }
-      });
       callback();
     }
   });
@@ -171,6 +144,14 @@ var closeDoor = function (callback) {
 var nextMiniGame = function () {
   closeDoor(function () {
     setUpMiniGame();
+    setTimeout( function () {
+      doorOpenAudio.play();
+      },
+      500);
+      setTimeout( function () {
+      Minigame1Audio.play();
+      },
+      1000);
     animateMesh(leftDoor, new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), {
       duration: 800,
       callback: function() {
@@ -190,7 +171,7 @@ var initMiniGames = function () {
   possibleGames.push(simonSaysMiniGame);
   possibleGames.push(punchingMiniGame);
   possibleGames.push(petBoxMiniGame);
-}
+};
 
 var initWidgets = function () {
 	window.widgets = new LeapWidgets(window.scene);
@@ -208,6 +189,9 @@ var initWidgets = function () {
   camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
   camera.position.z = 500;
  	scene.add(camera);
+
+  // SETUP TIMER
+  timer = widgets.createLabel("Time: ", new THREE.Vector3(camera.position.x - 100, camera.position.y - 80, camera.position.z - 200), 16, 0xdddddd);
 
   // SETUP SPOTLIGHT
   var spotLight = new THREE.SpotLight(0xffffff, 1);
