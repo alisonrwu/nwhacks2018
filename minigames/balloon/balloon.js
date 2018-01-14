@@ -11,7 +11,7 @@ var initWidgets = function () {
 
 	var pumpButton = widgets.createButton("Pump", new THREE.Vector3(100, 0, -110), new THREE.Vector3(100, 70, 50));
 	pumpButton.addEventListener('press', function(evt) {
-		balloon.scale.addScalar(1);
+		scaleUp(balloon);
 		console.log(balloon.scale);
 	});
 
@@ -70,11 +70,24 @@ var initScene = function () {
 	string = new THREE.Mesh(cylinderGeometry, stringMaterial);
 	string.position.y = 50
 	scene.add(string);
+
 };
 
 function update() {
 	requestAnimationFrame(update);
 	renderer.render(scene, camera);
+	TWEEN.update();
+}
+
+function scaleUp(mesh) {
+	var incremented = mesh.scale.x+1;
+	// create the tween
+    var tweenVector3 = new TWEEN.Tween(mesh.scale)
+        .to({ x: incremented, y: incremented, z: incremented }, 300)
+        .easing(TWEEN.Easing.Elastic.InOut);
+    // start the tween
+    tweenVector3.start();
 }
 
 initScene();
+update();
