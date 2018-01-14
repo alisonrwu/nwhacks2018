@@ -6,6 +6,7 @@
   var KNOB_COLOR_ACTIVE = 0x81d41d;
 
   var BACKGROUND_COLOR = 0x000000;
+  var buttonColors = [];
 
   window.LeapWidgets = function (scene) {
     this.scene = scene;
@@ -144,11 +145,11 @@
 
   };
 
-  LeapWidgets.prototype.createWall = function(position, dimensions) {
+  LeapWidgets.prototype.createWall = function(position, dimensions, wallColor = BACKGROUND_COLOR) {
     var wall = new Physijs.BoxMesh(
       new THREE.BoxGeometry(dimensions.x, dimensions.y, dimensions.z),
       Physijs.createMaterial(new THREE.MeshPhongMaterial({
-        color: BACKGROUND_COLOR
+        color: wallColor
       }), 1, 0.9),
       0
     );
@@ -158,14 +159,15 @@
 
     return wall;
   };
-  LeapWidgets.prototype.createButton = function(text, position, dimensions) {
+  LeapWidgets.prototype.createButton = function(text, position, dimensions, buttonColor = BUTTON_COLOR) {
     var button = new Physijs.BoxMesh(
       new THREE.BoxGeometry(dimensions.x, dimensions.y, dimensions.z),
       Physijs.createMaterial(new THREE.MeshPhongMaterial({
-        color: BUTTON_COLOR
+        color: buttonColor
       }), 1, 0.9),
       100
     );
+	buttonColors.push(buttonColor);
     button.originalposition = position;
     button.position.copy(button.originalposition);
     button.receiveShadow = true;
@@ -308,21 +310,23 @@
     return label;
   }
 
-
+	LeapWidgets.prototype.changeButtonPressedColor = function(color) {
+		BUTTON_COLOR_PRESSED = color;
+	}
 
   LeapWidgets.prototype.update = function() {
-    this.buttons.forEach(function(button) {
-      button.setLinearVelocity(new THREE.Vector3().copy(button.originalposition).sub(button.position).multiplyScalar(16));
-      var pressed = button.position.z+5 < button.originalposition.z;
-      button.material.color.setHex(pressed ? BUTTON_COLOR_PRESSED : BUTTON_COLOR);
-      if (!button.lastPressed && pressed) {
-          button.dispatchEvent('press', {target: button});
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].setLinearVelocity(new THREE.Vector3().copy(buttons[i].originalposition).sub(buttons[i].position).multiplyScalar(16));
+      var pressed = buttons[i].position.z+5 < buttons[i].originalposition.z;
+      buttons[i].material.color.setHex(pressed ? BUTTON_COLOR_PRESSED : buttonColors[i]);
+      if (!buttons[i].lastPressed && pressed) {
+          buttons[i].dispatchEvent('press', {target: buttons[i]});
       }
-      if (button.lastPressed && !pressed) {
-          button.dispatchEvent('pressed', {target: button});
+      if (buttons[i].lastPressed && !pressed) {
+          buttons[i].dispatchEvent('pressed', {target: buttons[i]});
       }
-      button.lastPressed = pressed;
-    });
+      buttons[i].lastPressed = pressed;
+    }
     this.switches.forEach(function(stick) {
       stick.setLinearVelocity(new THREE.Vector3(0,1000,0));
       stick.setAngularVelocity(new THREE.Vector3(0,0,0));
