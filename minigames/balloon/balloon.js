@@ -2,10 +2,11 @@ var camera;
 var controls;
 var balloon;
 
-loadBalloonMiniGame = function () {
+init = function () {
 	var sphereGeometry = new THREE.SphereGeometry(10, 32, 32);
 	var sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xdd55ff });
 	balloon = new THREE.Mesh(sphereGeometry, sphereMaterial);
+	balloon.inflated = 0;
 	balloon.position.y = 200;
 	scene.add(balloon);
 
@@ -21,12 +22,24 @@ loadBalloonMiniGame = function () {
 	var pumpButton = widgets.createButton("Pump", new THREE.Vector3(100, 0, -110), new THREE.Vector3(100, 70, 50));
 	pumpButton.addEventListener('press', function(evt) {
 		balloon.scale.addScalar(1);
+		balloon.inflated++;
+		console.log(balloon.inflated);
+
 		console.log(balloon.scale);
 	});
 };
 
-balloonMiniGame = new MiniGame(loadBalloonMiniGame, tearDown);
+update = function () {
+	if (balloon.inflated === 3) {
+		balloonMiniGame.success = true;
+	};
+}
+
+balloonMiniGame = new MiniGame(init, tearDown, update);
 
 var tearDown = function () {
-	console.log("teardown");
+	scene.remove(balloon);
+	scene.remove(string);
+	scene.remove(wall);
+	scene.remove(pumpButton);
 };

@@ -1,14 +1,28 @@
+var currentGame = null;
+
 var startGame = function () {
   scene.remove(startButton);
-  closeDoors();
+  nextMiniGame();
 };
+
+var setUpMiniGame = function () {
+  if (currentGame != null) {
+    currentGame.tearDown();
+  }
+
+  selectRandomMiniGame();
+  currentGame.init();
+  startTimer();
+}
 
 var selectRandomMiniGame = function() {
+  var select = Math.floor((Math.random() * 2));
 
-};
-
-var loadMiniGame = function () {
-
+  if (select === 0) {
+    currentGame = balloonMiniGame;
+  } elseif (select === 1) {
+    
+  }
 };
 
 var startTimer = function () {
@@ -20,7 +34,13 @@ var startTimer = function () {
   var timerUpdate = setInterval(function() {
     currentTime--;
     timer.setText("Time: " + parseInt(currentTime));
-    if (currentTime == 0) {
+    if (currentTime === 0) {
+      if (currentGame.success === true) {
+        gameSucceed();
+      } else {
+        gameOver();
+      }
+
       clearInterval(timerUpdate);
       scene.remove(timer);
     }
@@ -28,11 +48,12 @@ var startTimer = function () {
 }
 
 var gameSucceed = function () {
-
+  console.log("Success!");
+  nextMiniGame();
 };
 
 var gameOver = function () {
-
+  console.log("Fail!");
 };
 
 var animateMesh = function(mesh, target, options){
@@ -65,8 +86,7 @@ var animateMesh = function(mesh, target, options){
     return tweenVector3;
 };
 
-
-var closeDoors = function () {
+var nextMiniGame = function () {
   DOOR_WIDTH = window.innerWidth / 2;
   DOOR_HEIGHT = window.innerHeight;
   DOOR_DEPTH = 100;
@@ -82,24 +102,22 @@ var closeDoors = function () {
   animateMesh(leftDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z));
   animateMesh(rightDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z), {
     callback: function() {
-      balloonMiniGame.init();
-      openDoors();
+      setUpMiniGame();
+
+      animateMesh(leftDoor, new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), {
+        callback: function() {
+          scene.remove(leftDoor);
+        }});
+      animateMesh(rightDoor, new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), {
+        callback: function() {
+          scene.remove(rightDoor);
+        }
+      });
     }
   });
 };
 
-// Assume closeDoors was called first (this is bad coding practice)
-var openDoors = function () {
-  animateMesh(leftDoor, new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), {
-    callback: function() {
-      scene.remove(leftDoor);
-    }});
-  animateMesh(rightDoor, new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), {
-    callback: function() {
-      scene.remove(rightDoor);
-    }
-  });
-};
+
 
 var initWidgets = function () {
 	window.widgets = new LeapWidgets(window.scene);
@@ -158,6 +176,9 @@ var initScene = function () {
 };
 
 function update() {
+  if (currentGame != null) {
+    currentGame.update();
+  }
   scene.simulate();
   renderer.render(scene, camera);
   TWEEN.update();
