@@ -7,6 +7,7 @@ var wrongAudio = new Audio('../../sounds/wrong.wav');
 var doorOpenAudio =  new Audio('../../sounds/door_opening.wav');
 var doorCloseAudio = new Audio('../../sounds/door_closing.wav');
 var MinigameSongs = [(new Audio('../../sounds/Minigame1.mp3')), (new Audio('../../sounds/Minigame2.mp3'))];
+var counter = 0;
 
 
 var startGame = function () {
@@ -25,13 +26,14 @@ var setUpMiniGame = function () {
 };
 
 var selectRandomMiniGame = function() {
-  var select = Math.floor((Math.random() * possibleGames.length));
-  console.log(possibleGames);
-  currentGame = possibleGames[select];
+  // var select = Math.floor((Math.random() * possibleGames.length));
+  // console.log(possibleGames);
+  currentGame = possibleGames[counter];
+  counter++;
 };
 
 var startTimer = function () {
-  TIMER_START = 17;
+  TIMER_START = 8;
   var currentTime = TIMER_START;
 
   var timerUpdate = setInterval(function() {
@@ -167,10 +169,11 @@ var nextMiniGame = function () {
 };
 
 var initMiniGames = function () {
-  possibleGames.push(balloonMiniGame);
   possibleGames.push(simonSaysMiniGame);
-  possibleGames.push(punchingMiniGame);
+  possibleGames.push(balloonMiniGame);
   possibleGames.push(petBoxMiniGame);
+  possibleGames.push(punchingMiniGame);
+
 };
 
 var initWidgets = function () {
