@@ -1,5 +1,13 @@
+var STARTING_LIVES = 3;
+var numOfLives = STARTING_LIVES;
 var possibleGames = [];
 var currentGame = null;
+var succeedAudio = new Audio('../../sounds/correct.wav');
+var wrongAudio = new Audio('../../sounds/wrong.wav');
+var doorOpenAudio =  new Audio('../../sounds/door_opening.wav');
+var doorCloseAudio = new Audio('../../sounds/door_closing.wav');
+var Minigame1Audio = new Audio('../../sounds/Minigame1.mp3');
+
 
 var startGame = function () {
   scene.remove(startButton);
@@ -30,6 +38,10 @@ var startTimer = function () {
   var timerUpdate = setInterval(function() {
     currentTime--;
     timer.setText("Time: " + parseInt(currentTime));
+    if (currentTime === 3) {
+
+    }
+
     if (currentTime === 0) {
       clearInterval(timerUpdate);
 
@@ -43,12 +55,31 @@ var startTimer = function () {
 }
 
 var gameSucceed = function () {
-  console.log("Success!");
+	succeedAudio.play();
   nextMiniGame();
 };
 
 var gameOver = function () {
-  console.log("Fail!");
+	wrongAudio.play();
+
+  setTimeout(function() {
+    scene.remove(lives[numOfLives - 1]);
+    lives.pop();
+    numOfLives--;
+  }, 500);
+
+
+  setTimeout(function () {
+    if (numOfLives != 0) {
+      nextMiniGame();
+    } else {
+      closeDoor(function () {
+        currentGame.tearDown();
+        widgets.createLabel("GAME OVER!! ", new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z - 200), 14, 0xffff00);
+        console.log('game over');
+      })
+    }
+  }, 2000);
 };
 
 var animateMesh = function(mesh, target, options){
@@ -81,38 +112,41 @@ var animateMesh = function(mesh, target, options){
     return tweenVector3;
 };
 
-var nextMiniGame = function () {
+var closeDoor = function (callback) {
   DOOR_WIDTH = window.innerWidth / 2;
   DOOR_HEIGHT = window.innerHeight;
-  DOOR_DEPTH = 100;
+  DOOR_DEPTH = 10;
   DOOR_Y = camera.position.y;
-  DOOR_Z = camera.position.z- DOOR_DEPTH;
+  DOOR_Z = camera.position.z - 230;
+	
+	setTimeout( function () {
+		doorCloseAudio.play();
+		},
+		250);
+	
 
   LEFT_DOOR_X = camera.position.x - DOOR_WIDTH;
   leftDoor = widgets.createWall(new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
 
   RIGHT_DOOR_X = camera.position.x + DOOR_WIDTH;
   rightDoor = widgets.createWall(new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
-	setTimeout( function () {
-		var audio = new Audio('../../sounds/door_closing.wav');
-		audio.play();
-	},
-	1000);
+	
 
-  animateMesh(leftDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z));
+  animateMesh(leftDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z), {
+    duration: 800
+  });
   animateMesh(rightDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z), {
+    duration: 800,
     callback: function() {
       setUpMiniGame();
 			setTimeout( function () {
-				var audio = new Audio('../../sounds/door_opening.wav');
-				audio.play(); 
+				doorOpenAudio.play();
+				},
+				500);
+				setTimeout( function () {
+				Minigame1Audio.play();
 				},
 				1000);
-				setTimeout( function () {
-				var audio = new Audio('../../sounds/Minigame1.mp3');
-				audio.play(); 
-				},
-				2000);
       animateMesh(leftDoor, new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), {
         callback: function() {
           scene.remove(leftDoor);
@@ -122,7 +156,25 @@ var nextMiniGame = function () {
           scene.remove(rightDoor);
         }
       });
+      callback();
     }
+  });
+}
+
+var nextMiniGame = function () {
+  closeDoor(function () {
+    setUpMiniGame();
+    animateMesh(leftDoor, new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), {
+      duration: 800,
+      callback: function() {
+        scene.remove(leftDoor);
+      }});
+    animateMesh(rightDoor, new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), {
+      duration: 800,
+      callback: function() {
+        scene.remove(rightDoor);
+      }
+    });
   });
 };
 
@@ -138,7 +190,7 @@ var initWidgets = function () {
 
   // SETUP START BUTTON
   var BUTTON_DEPTH = 30;
-  startButton = widgets.createButton("Start", new THREE.Vector3(0, 0, -150), new THREE.Vector3(200, 100, BUTTON_DEPTH));
+  startButton = widgets.createButton("Start", new THREE.Vector3(0, 0, -50), new THREE.Vector3(200, 100, BUTTON_DEPTH));
     startButton.addEventListener('press', function(evt) {
       console.log("Start button pressed");
       startGame();
@@ -174,11 +226,32 @@ var initWidgets = function () {
 	}, false);
 
   // SETUP TIMER
-  timer = widgets.createLabel("Time: ", new THREE.Vector3(camera.position.x - 120, camera.position.y - 120, camera.position.z - 300), 15, 0x000000);
+  timer = widgets.createLabel("Time: ", new THREE.Vector3(camera.position.x - 120, camera.position.y - 80, camera.position.z - 200), 14, 0xffff00);
+
+  // SETUP LIVES
+  lives = [];
+
+  var geometry = new THREE.SphereGeometry( 8, 32, 32 );
+  var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+  var sphere = new THREE.Mesh( geometry, material );
+  lives.push(sphere);
+  sphere.position.set(camera.position.x - 135, camera.position.y + 80, camera.position.z - 200);
+  scene.add( sphere );
+
+  var sphere2 = new THREE.Mesh( geometry, material );
+  lives.push(sphere2);
+  sphere2.position.set(camera.position.x - 105, camera.position.y + 80, camera.position.z - 200);
+  scene.add( sphere2 );
+
+  var sphere3 = new THREE.Mesh( geometry, material );
+  lives.push(sphere3);
+  sphere3.position.set(camera.position.x - 75, camera.position.y + 80, camera.position.z - 200);
+  scene.add( sphere3 );
 };
 
 var initScene = function () {
   Physijs.scripts.worker = '../../js/lib/physijs_worker.js';
+  Physijs.scripts.ammo = '../../js/lib/ammo.js';
   window.scene = new Physijs.Scene();
 
   window.renderer = new THREE.WebGLRenderer({
@@ -204,5 +277,5 @@ function update() {
   requestAnimationFrame(update);
 }
 
-init();
+window.onload = init();
 update();

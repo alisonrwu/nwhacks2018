@@ -1,6 +1,6 @@
 
-var xDistance = 75;
-var yDistance = 50;
+var xDistance = 100;
+var yDistance = 75;
 var buttons = [];
 var wall;
 var label;
@@ -20,7 +20,7 @@ var init = function () {
 	fail = false;
 	gameStart = false;
 	progress = 0;
-	label = widgets.createLabel("Simon Says", new THREE.Vector3(0, 110, -110), 16, 0xffffff);
+	label = widgets.createLabel("Simon Says", new THREE.Vector3(0, 20, -110), 16, 0xffffff);
 	wall = widgets.createWall(new THREE.Vector3(0, 0, -200), new THREE.Vector3(500, 300, 10));
 
 	for (var i = 0; i < 4; i++) {
@@ -41,7 +41,7 @@ var init = function () {
 	for (var i = 0; i < NUM_SEQUENCE; i++) {
 		buttonSequence.push(Math.floor(Math.random() * NUM_SEQUENCE));
 	}
-	setTimeout(playSequence, 5000);
+	setTimeout(playSequence, 2000);
 }
 
 var update = function () {
@@ -62,12 +62,16 @@ function pressButton(id) {
 	}
 }
 
-var teardown = function() {
+var tearDown = function() {
+
+	console.log(scene);
+	scene.remove(wall);
 	scene.remove(wall);
 	for (var i = 0; i < 4; i++) {
 		scene.remove(buttons[i]);
 	}
 	scene.remove(label);
+	console.log("label doesn't remove");
 }
 
 var playSequence = function() {
@@ -82,4 +86,4 @@ var playSequence = function() {
 	}
 }
 
-simonSaysMiniGame = new MiniGame(init, teardown, update);
+simonSaysMiniGame = new MiniGame(init, tearDown, update);
