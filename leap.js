@@ -1,3 +1,17 @@
+MIDI.loadPlugin({
+	soundfontUrl: "soundfont/",
+	instrument: "acoustic_grand_piano", // or multiple instruments
+	onprogress: function(state, progress) {
+		console.log(state, progress);
+	},
+	onsuccess: function () {
+		delay = 0; // play one note every quarter second
+		note = 50; // the MIDI note
+		velocity = 127; // how hard the note hits
+		MIDI.setVolume(0, 30);
+	}
+});
+
 var initScene = function () {
   Physijs.scripts.worker = 'js/lib/physijs_worker.js';
   window.scene = new Physijs.Scene();
@@ -27,9 +41,11 @@ var initScene = function () {
   var increaseButton = widgets.createButton("Increase", new THREE.Vector3(100, 0, -110), new THREE.Vector3(100, 70, 30));
   decreaseButton.addEventListener('press', function(evt) {
     counterLabel.setText(parseInt(counterLabel.getText())-1);
+    MIDI.noteOn(0, 30, 127, 0);
   });
   increaseButton.addEventListener('press', function(evt) {
     counterLabel.setText(parseInt(counterLabel.getText())+1);
+    MIDI.noteOn(0, 60, 127, 0);
   });
   var spotLight = new THREE.SpotLight(0xffffff, 1);
   spotLight.shadowCameraVisible = true;
