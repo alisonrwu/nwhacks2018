@@ -1,5 +1,3 @@
-var buttons = [];
-
 var update = function() {
   this.counterLabel = counterLabel.setText(parseInt(counterLabel.getText()));
 }
@@ -7,26 +5,35 @@ var update = function() {
 var initWidgets = function () {
 	window.widgets = new LeapWidgets(window.scene);
 	widgets.initLeapHand();
-	widgets.createLabel("Press all the buttons", new THREE.Vector3(0, 120, -110), 16, 0x0);
-	var pressed = 0;
-	var buttons_pressed = widgets.createLabel("Buttons Pressed: ", new THREE.Vector3(150, -100, -110), 16, 0x0);
+	var instructions = widgets.createLabel("Give your pet box a rub!", new THREE.Vector3(0, 120, -110), 16, 0x0);
+	var buttons_pressed = widgets.createLabel("Happiness: ", new THREE.Vector3(150, -100, -110), 16, 0x0);
   var counterLabel = widgets.createLabel("0", new THREE.Vector3(250, -100, -110), 16, 0x0);
+  var goal = 10;
+  var goal_label = widgets.createLabel("/ " + goal, new THREE.Vector3(300, -100, -110), 16, 0x0);
 
 	// create buttons
-  for (var i = 0; i < 10; i++ {
-    buttons[i] = createButton("", new THREE.Vector3(0, 0, -110), new THREE.Vector3(100,50,30));
-  })
-	// var button1 = createButton("", new THREE.Vector3(0, -75, -110), new THREE.Vector3(100, 50, 30));
-	var button = createButton("", new THREE.Vector3(0, 0, -110), new THREE.Vector3(100,50,30));
-	// var button3 = createButton("", new THREE.Vector3(0, 75, -110), new THREE.Vector3(100, 50, 30));
+  // for (var i = 0; i < 10; i++) {
+  //   buttons[i] = widgets.createButton("", new THREE.Vector3(0, 0, -110), new THREE.Vector3(100,50,30));
+  // }
+	var button2 = widgets.createButton("", new THREE.Vector3(0, 0, -110), new THREE.Vector3(50,50,50), "0x808080");
 
-	// button1.addEventListener('press', function(evt) {
-	// 	pressed++;
-	// 	counterLabel.getText;
+  // button1.addEventListener('press', function(evt) {
+	// 	counterLabel.setText(parseInt(counterLabel.getText())+1);
 	// });
-	button2.addEventListener('press', function(evt) {
-		counterLabel.setText(parseInt(counterLabel.getText())+1);
-	});
+
+  button2.addEventListener('press', function(evt) {
+    if (parseInt(counterLabel.getText()) < 10) {
+  	   counterLabel.setText(parseInt(counterLabel.getText())+1);
+     }
+
+    if (parseInt(counterLabel.getText()) === goal) {
+      instructions.setText("Yay your pet box is happy!");
+      setTimeout(function () {
+        window.location.replace("../mainmenu/mainmenu.html");
+      }, 3000);
+    }
+  });
+
 	// button3.addEventListener('press', function(evt) {
 	// 	pressed++;
 	// });
@@ -40,7 +47,7 @@ var initWidgets = function () {
 	spotLight.shadowMapHeight = 6048;
 	spotLight.shadowCameraFar = 1000;
 	spotLight.shadowDarkness = 0.5;
-	// spotLight.position.fromArray([wall.position.x, wall.position.y, wall.position.z + 1000]);
+	spotLight.position.fromArray([0, 0, 1000]);
 	// spotLight.target.position.copy(wall.position);
 	scene.add(spotLight);
 	window.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
