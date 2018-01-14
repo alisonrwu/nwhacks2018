@@ -51,7 +51,6 @@ var initScene = function () {
 	window.scene.addEventListener('update', function() {
     	scene.simulate( undefined, 2 );
 	});
-	// window.scene.setGravity({x:0,y:0,z:0});
 
 	window.renderer = new THREE.WebGLRenderer({alpha: true});
 	window.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -59,9 +58,6 @@ var initScene = function () {
 	document.body.appendChild(window.renderer.domElement);
 
 	initWidgets();
-
-	// var worldFrame = new THREE.AxesHelper(100);
-	// scene.add(worldFrame);
 
 	var sphereGeometry = new THREE.SphereGeometry(10, 32, 32);
 	var sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xdd55ff });
@@ -82,26 +78,3 @@ function update() {
 }
 
 initScene();
-
-
-// var controller = Leap.loop({enableGestures: true}, function(frame){
-//   if(frame.valid && frame.gestures.length > 0){
-//     frame.gestures.forEach(function(gesture){
-//         switch (gesture.type){
-//           case "circle":
-//               console.log("Circle Gesture");
-//               break;
-//           case "keyTap":
-//               console.log("Key Tap Gesture");
-//               balloon.scale.addScalar(1);
-//               break;
-//           case "screenTap":
-//               console.log("Screen Tap Gesture");
-//               break;
-//           case "swipe":
-//               console.log("Swipe Gesture");
-//               break;
-//         }
-//     });
-//   }
-// });
