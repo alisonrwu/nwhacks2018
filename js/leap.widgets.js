@@ -159,7 +159,7 @@
 
     return wall;
   };
-  LeapWidgets.prototype.createButton = function(text, position, dimensions, buttonColor = BUTTON_COLOR, changecolor = false) {
+  LeapWidgets.prototype.createButton = function(text, position, dimensions, buttonColor = BUTTON_COLOR) {
     var button = new Physijs.BoxMesh(
       new THREE.BoxGeometry(dimensions.x, dimensions.y, dimensions.z),
       Physijs.createMaterial(new THREE.MeshPhongMaterial({
