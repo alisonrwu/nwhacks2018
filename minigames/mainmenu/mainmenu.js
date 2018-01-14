@@ -1,6 +1,39 @@
 var startGame = function () {
+  scene.remove(startButton);
   closeDoors();
+};
+
+var selectRandomMiniGame = function() {
+
+};
+
+var loadMiniGame = function () {
+
+};
+
+var startTimer = function () {
+  TIMER_START = 10;
+  var currentTime = TIMER_START;
+  var timer = widgets.createLabel("Time: " + currentTime, new THREE.Vector3(camera.position.x - 120, camera.position.y - 120, camera.position.z - 300), 15, 0x000000);
+  scene.add(timer);
+
+  var timerUpdate = setInterval(function() {
+    currentTime--;
+    timer.setText("Time: " + parseInt(currentTime));
+    if (currentTime == 0) {
+      clearInterval(timerUpdate);
+      scene.remove(timer);
+    }
+  }, 1000);
 }
+
+var gameSucceed = function () {
+
+};
+
+var gameOver = function () {
+
+};
 
 var animateMesh = function(mesh, target, options){
     options = options || {};
@@ -11,7 +44,7 @@ var animateMesh = function(mesh, target, options){
 
     var update = function() {
       mesh.__dirtyPosition = true;
-    }
+    };
 
     // create the tween
     var tweenVector3 = new TWEEN.Tween(mesh.position)
@@ -30,30 +63,43 @@ var animateMesh = function(mesh, target, options){
     tweenVector3.start();
     // return the tween in case we want to manipulate it later on
     return tweenVector3;
-}
+};
+
 
 var closeDoors = function () {
   DOOR_WIDTH = window.innerWidth / 2;
   DOOR_HEIGHT = window.innerHeight;
   DOOR_DEPTH = 100;
+  DOOR_Y = camera.position.y;
+  DOOR_Z = camera.position.z- DOOR_DEPTH;
 
   LEFT_DOOR_X = camera.position.x - DOOR_WIDTH;
-  LEFT_DOOR_Y = camera.position.y;
-  LEFT_DOOR_Z = camera.position.z - DOOR_DEPTH;
-  leftDoorVector = new THREE.Vector3(LEFT_DOOR_X, LEFT_DOOR_Y, LEFT_DOOR_Z)
-  leftDoor = widgets.createWall(leftDoorVector, new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
-  var leftDoorTarget = new THREE.Vector3(LEFT_DOOR_X + DOOR_WIDTH, LEFT_DOOR_Y, LEFT_DOOR_Z);
-  animateMesh(leftDoor, leftDoorTarget);
+  leftDoor = widgets.createWall(new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
 
   RIGHT_DOOR_X = camera.position.x + DOOR_WIDTH;
-  RIGHT_DOOR_Y = 0;
-  RIGHT_DOOR_Z = camera.position.z - DOOR_DEPTH;
-  rightDoorVector = new THREE.Vector3(RIGHT_DOOR_X + DOOR_WIDTH, RIGHT_DOOR_Y, RIGHT_DOOR_Z)
-  rightDoor = widgets.createWall(rightDoorVector, new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
+  rightDoor = widgets.createWall(new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), new THREE.Vector3(DOOR_WIDTH, DOOR_HEIGHT, DOOR_DEPTH));
 
-  var rightDoorTarget = new THREE.Vector3(0, RIGHT_DOOR_Y, RIGHT_DOOR_Z);
-  animateMesh(rightDoor, rightDoorTarget);
-}
+  animateMesh(leftDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z));
+  animateMesh(rightDoor, new THREE.Vector3(camera.position.x, DOOR_Y, DOOR_Z), {
+    callback: function() {
+      balloonMiniGame.init();
+      openDoors();
+    }
+  });
+};
+
+// Assume closeDoors was called first (this is bad coding practice)
+var openDoors = function () {
+  animateMesh(leftDoor, new THREE.Vector3(LEFT_DOOR_X, DOOR_Y, DOOR_Z), {
+    callback: function() {
+      scene.remove(leftDoor);
+    }});
+  animateMesh(rightDoor, new THREE.Vector3(RIGHT_DOOR_X, DOOR_Y, DOOR_Z), {
+    callback: function() {
+      scene.remove(rightDoor);
+    }
+  });
+};
 
 var initWidgets = function () {
 	window.widgets = new LeapWidgets(window.scene);
@@ -62,7 +108,7 @@ var initWidgets = function () {
   // SETUP DOORS
 
   var BUTTON_DEPTH = 30;
-  var startButton = widgets.createButton("Start", new THREE.Vector3(0, 0, 0 - (BUTTON_DEPTH * 2)), new THREE.Vector3(200, 100, BUTTON_DEPTH));
+  startButton = widgets.createButton("Start", new THREE.Vector3(0, 0, -150), new THREE.Vector3(200, 100, BUTTON_DEPTH));
     startButton.addEventListener('press', function(evt) {
       console.log("Start button pressed");
       startGame();
@@ -96,15 +142,11 @@ var initWidgets = function () {
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.render(scene, camera);
 	}, false);
-}
+};
 
 var initScene = function () {
   Physijs.scripts.worker = '../../js/lib/physijs_worker.js';
   window.scene = new Physijs.Scene();
-  window.scene.addEventListener('update', function() {
-    scene.simulate( undefined, 2 );
-  });
-  // window.scene.setGravity({x:0,y:0,z:0});
 
   window.renderer = new THREE.WebGLRenderer({
     alpha: true
@@ -116,9 +158,10 @@ var initScene = function () {
 };
 
 function update() {
+  scene.simulate();
   renderer.render(scene, camera);
-  requestAnimationFrame(update);
   TWEEN.update();
+  requestAnimationFrame(update);
 }
 
 initScene();
