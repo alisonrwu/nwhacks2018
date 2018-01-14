@@ -45,7 +45,7 @@ var init = function () {
 		buttonSequence.push(Math.floor(Math.random() * NUM_SEQUENCE));
 	}
 	setTimeout(playSequence, 2000);
-}
+};
 
 var update = function () {
 }
@@ -63,7 +63,7 @@ function pressButton(id) {
 		simonSaysMiniGame.success = true;
 		console.log("You won!");
 	}
-}
+};
 
 var tearDown = function() {
 	scene.remove(wall);
@@ -72,7 +72,7 @@ var tearDown = function() {
 	}
 	var label = scene.getObjectByName("Simon Says");
 	scene.remove(label);
-}
+};
 
 var playSequence = function() {
 	var curButton = buttons[buttonSequence[currentSequence]];
@@ -84,7 +84,7 @@ var playSequence = function() {
 	} else {
 		setTimeout(function () { gameStart = true; }, 1000);
 	}
-}
+};
 
 var createText = function(text, size, vector3, material) {
   var loader = new THREE.FontLoader();

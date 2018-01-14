@@ -6,7 +6,7 @@ var succeedAudio = new Audio('../../sounds/correct.wav');
 var wrongAudio = new Audio('../../sounds/wrong.wav');
 var doorOpenAudio =  new Audio('../../sounds/door_opening.wav');
 var doorCloseAudio = new Audio('../../sounds/door_closing.wav');
-var Minigame1Audio = new Audio('../../sounds/Minigame1.mp3');
+var MinigameSongs = [(new Audio('../../sounds/Minigame1.mp3')), (new Audio('../../sounds/Minigame2.mp3'))];
 
 
 var startGame = function () {
@@ -75,7 +75,7 @@ var gameOver = function () {
         createText("Game Over", 16, new THREE.Vector3(camera.position.x - 65, camera.position.y, camera.position.z - 200), new THREE.MeshPhongMaterial({
             color: 0xfddddd
         }));
-      })
+      });
     }
   }, 2000);
 };
@@ -171,7 +171,7 @@ var initMiniGames = function () {
   possibleGames.push(simonSaysMiniGame);
   possibleGames.push(punchingMiniGame);
   possibleGames.push(petBoxMiniGame);
-}
+};
 
 var initWidgets = function () {
 	window.widgets = new LeapWidgets(window.scene);
