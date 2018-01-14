@@ -315,17 +315,17 @@
 	}
 
   LeapWidgets.prototype.update = function() {
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].setLinearVelocity(new THREE.Vector3().copy(buttons[i].originalposition).sub(buttons[i].position).multiplyScalar(16));
-      var pressed = buttons[i].position.z+5 < buttons[i].originalposition.z;
-      buttons[i].material.color.setHex(pressed ? BUTTON_COLOR_PRESSED : buttonColors[i]);
-      if (!buttons[i].lastPressed && pressed) {
-          buttons[i].dispatchEvent('press', {target: buttons[i]});
+    for (var i = 0; i < this.buttons.length; i++) {
+      this.buttons[i].setLinearVelocity(new THREE.Vector3().copy(this.buttons[i].originalposition).sub(this.buttons[i].position).multiplyScalar(16));
+      var pressed = this.buttons[i].position.z+5 < this.buttons[i].originalposition.z;
+      this.buttons[i].material.color.setHex(pressed ? BUTTON_COLOR_PRESSED : buttonColors[i]);
+      if (!this.buttons[i].lastPressed && pressed) {
+          this.buttons[i].dispatchEvent('press', {target: this.buttons[i]});
       }
-      if (buttons[i].lastPressed && !pressed) {
-          buttons[i].dispatchEvent('pressed', {target: buttons[i]});
+      if (this.buttons[i].lastPressed && !pressed) {
+          this.buttons[i].dispatchEvent('pressed', {target: this.buttons[i]});
       }
-      buttons[i].lastPressed = pressed;
+      this.buttons[i].lastPressed = pressed;
     }
     this.switches.forEach(function(stick) {
       stick.setLinearVelocity(new THREE.Vector3(0,1000,0));
